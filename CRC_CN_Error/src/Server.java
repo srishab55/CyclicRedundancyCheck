@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Server {
@@ -20,6 +21,8 @@ public class Server {
 		System.out.println("Client connected");
 		dos=new DataOutputStream(socket.getOutputStream());
 		
+		injectError ij=new injectError();
+		Random rand=new Random();
 		while (true) {
 			
 			System.out.println("Enter data to be deliver to client");
@@ -27,6 +30,10 @@ public class Server {
 			if(str.equals("exit")) break;
 			
 			String converted=converttobinary(str);
+			System.out.println(converted);
+			int num=rand.nextInt(2);
+			if(num==0)
+			converted=ij.injection(converted);
 			System.out.println(converted);
 			dos.writeUTF(converted);
 			
@@ -51,8 +58,10 @@ public class Server {
 		String divisor="1010";
 		XorOperation xp=new XorOperation();
 		String toAdd=xp.xor(s,divisor);
-		System.out.println(toAdd);
+		System.out.println("CRC :"+toAdd);
 		toReturn=t+toAdd;
+		
+		
 		return toReturn;
 	}
 	public static void main(String[] args) {
